@@ -1,41 +1,76 @@
 <?php
-  /**
-  * Requires the "PHP Email Form" library
-  * The "PHP Email Form" library is available only in the pro version of the template
-  * The library should be uploaded to: vendor/php-email-form/php-email-form.php
-  * For more info and help: https://bootstrapmade.com/php-email-form/
-  */
+/**
+ * Secure PHP Email Form Handler for 1405Media
+ * Configured for: 1405media@gmail.com
+ */
 
-  // Replace contact@example.com with your real receiving email address
-  $receiving_email_address = 'contact@example.com';
+// 1. Set your receiving email
+$receiving_email_address = '1405media@gmail.com';
 
-  if( file_exists($php_email_form = '../assets/vendor/php-email-form/php-email-form.php' )) {
-    include( $php_email_form );
-  } else {
-    die( 'Unable to load the "PHP Email Form" Library!');
-  }
+// 2. Only allow POST requests
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    header('HTTP/1.1 403 Forbidden');
+    die('Access denied');
+}
 
-  $contact = new PHP_Email_Form;
-  $contact->ajax = true;
-  
-  $contact->to = $receiving_email_address;
-  $contact->from_name = $_POST['name'];
-  $contact->from_email = $_POST['email'];
-  $contact->subject = $_POST['subject'];
+// 3. Basic validation
+$required_fields = ['name', 'email', 'message'];
+foreach ($required_fields as $field) {
+    if (empty($_POST[$field])) {
+        header('HTTP/1.1 400 Bad Request');
+        die('Please fill all required fields');
+    }
+}
 
-  // Uncomment below code if you want to use SMTP to send emails. You need to enter your correct SMTP credentials
-  /*
-  $contact->smtp = array(
-    'host' => 'example.com',
-    'username' => 'example',
-    'password' => 'pass',
-    'port' => '587'
-  );
-  */
+// 4. Validate email format
+if (!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
+    header('HTTP/1.1 400 Bad Request');
+    die('Invalid email address');
+}
 
-  $contact->add_message( $_POST['name'], 'From');
-  $contact->add_message( $_POST['email'], 'Email');
-  $contact->add_message( $_POST['message'], 'Message', 10);
+// 5. Load the email library
+$library_path = '../assets/vendor/php-email-form/php-email-form.php';
+if (!file_exists($library_path)) {
+    header('HTTP/1.1 500 Server Error');
+    die('Server configuration issue - please contact support');
+}
+require_once($library_path);
 
-  echo $contact->send();
-?>
+// 6. Initialize and configure
+$contact = new PHP_Email_Form;
+$contact->ajax = true;
+$contact->to = $receiving_email_address;
+$contact->from_name = htmlspecialchars(trim($_POST['name']));
+$contact->from_email = filter_var(trim($_POST['email']), FILTER_SANITIZE_EMAIL);
+$contact->subject = htmlspecialchars(trim($_POST['subject'] ?? 'New message from 1405Media website'));
+
+// 7. Recommended SMTP configuration (Gmail) - UNCOMMENT AND FILL BELOW
+/*
+$contact->smtp = array(
+    'host' => 'smtp.gmail.com',
+    'username' => '1405media@gmail.com',
+    'password' => 'your-gmail-app-password', // Use App Password if 2FA enabled
+    'port' => '587',
+    'encryption' => 'tls'
+);
+*/
+
+// 8. Add message content
+$contact->add_message($contact->from_name, 'From');
+$contact->add_message($contact->from_email, 'Email');
+$contact->add_message(htmlspecialchars(trim($_POST['message'])), 'Message');
+
+// 9. Honeypot spam trap
+if (!empty($_POST['website'])) { // Add <input type="text" name="website" class="hidden">
+    header('HTTP/1.1 200 OK');
+    die(); // Silent exit for bots
+}
+
+// 10. Send the email
+if ($contact->send()) {
+    header('HTTP/1.1 200 OK');
+    echo 'Thank you! Your message has been sent.';
+} else {
+    header('HTTP/1.1 500 Server Error');
+    echo 'Message failed to send. Please try again later.';
+}
