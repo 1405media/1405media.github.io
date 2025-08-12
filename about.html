@@ -30,41 +30,60 @@
 
   <!-- Header Size Reduction CSS -->
   <style>
-    /* Reduce header height and padding */
+    /* Reduced header container */
     .header {
       height: 60px !important;
       padding: 5px 0 !important;
+      transition: all 0.3s; /* Smooth resizing */
     }
 
-    /* Make logo smaller */
+    /* Logo image adjustments */
     .header .logo img {
-      height: 40px !important;
-      width: auto;
+      max-height: 45px !important; /* Better for PNG quality */
+      width: auto !important;
+      object-fit: contain;
+      transition: all 0.3s;
     }
 
-    /* Compact navbar items */
+    /* Navbar items */
     .navbar ul {
       margin-bottom: 0;
+      align-items: center;
     }
     .navbar a {
-      padding: 5px 10px !important;
-      font-size: 0.9rem !important;
+      padding: 8px 12px !important;
+      font-size: 0.95rem !important;
+    }
+    .dropdown-indicator {
+      font-size: 0.8rem !important;
     }
 
-    /* Smaller social icons */
+    /* Social icons */
     .header-social-links a {
       font-size: 16px !important;
-      margin-left: 8px !important;
+      margin-left: 10px !important;
+      padding: 5px !important;
     }
 
-    /* Adjust mobile menu toggle */
+    /* Mobile menu toggle */
     .mobile-nav-toggle {
       font-size: 24px !important;
+      margin-left: 15px !important;
     }
-    
-    /* Fix potential spacing issue */
+
+    /* Ensure content doesn't hide behind fixed header */
     body {
       padding-top: 60px !important;
+    }
+
+    /* Mobile responsiveness */
+    @media (max-width: 992px) {
+      .header .logo img {
+        max-height: 40px !important;
+      }
+      .navbar a {
+        padding: 6px 8px !important;
+      }
     }
   </style>
 </head>
