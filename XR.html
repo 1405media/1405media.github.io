@@ -27,21 +27,6 @@
 
   <!-- Template Main CSS File -->
   <link href="assets/css/main.css" rel="stylesheet">
-
-  <style>
-    /* Small gallery + iframe styling (keeps your existing theme) */
-    .tour-gallery { max-width:1200px; margin: 18px auto; padding: 0 20px; }
-    .tour-grid { display:grid; grid-template-columns: repeat(auto-fit,minmax(220px,1fr)); gap:16px; }
-    .tour-card { background: #111; border-radius:10px; overflow:hidden; text-align:center; box-shadow: 0 6px 18px rgba(0,0,0,0.6); border:1px solid rgba(255,255,255,0.02); }
-    .tour-card img { width:100%; height:140px; object-fit:cover; display:block; }
-    .tour-card .meta { padding:10px; color:#fff; }
-    .tour-card h4 { margin:0 0 6px 0; font-size:15px; }
-    .tour-card .actions { display:flex; gap:6px; justify-content:center; padding:8px; }
-    .btn-small { font-size:13px; padding:6px 10px; border-radius:6px; background: rgba(255,255,255,0.06); color:#fff; text-decoration:none; border:0; cursor:pointer; }
-    .tour-card.active { box-shadow: 0 10px 30px rgba(0,0,0,0.7); border-color: rgba(255,255,255,0.08); outline: 2px solid rgba(255,255,255,0.02); }
-    .iframe-wrap { width:100%; height:700px; background:#000; border-radius:6px; overflow:hidden; }
-    @media (max-width:700px) { .iframe-wrap{ height:520px; } .tour-card img { height:120px; } }
-  </style>
 </head>
 
 <body>
@@ -53,6 +38,8 @@
       <a href="index.html" class="logo d-flex align-items-center  me-auto me-lg-0">
         <img src="assets/img/logo/logo.png" alt="">
       </a>
+      
+
 
       <nav id="navbar" class="navbar">
         <ul>
@@ -100,49 +87,12 @@
       </div>
     </div><!-- End Page Header -->
 
-    <!-- ======= Gallery Section (NEW) ======= -->
-    <section id="xr-gallery" class="services">
-      <div class="container tour-gallery">
-        <div class="tour-grid" id="tourGrid">
-          <!-- Example card for Icon Tower (update folder name and thumb filename if different) -->
-          <div class="tour-card" data-src="virtual-tours/icon-tower/index.html" data-name="Icon Tower">
-            <img src="assets/thumbs/icon-tower.jpg" alt="Icon Tower">
-            <div class="meta">
-              <h4>Icon Tower</h4>
-              <div class="actions">
-                <button class="btn-small btn-load">Load</button>
-                <a class="btn-small" target="_blank" rel="noopener" href="virtual-tours/icon-tower/index.html">Open in new tab</a>
-              </div>
-            </div>
-          </div>
-
-          <!-- Copy this block to add more tours (change data-src, img src, and title) -->
-          <!--
-          <div class="tour-card" data-src="virtual-tours/another-tour/index.html" data-name="Another Tour">
-            <img src="assets/thumbs/another-tour.jpg" alt="Another Tour">
-            <div class="meta">
-              <h4>Another Tour</h4>
-              <div class="actions">
-                <button class="btn-small btn-load">Load</button>
-                <a class="btn-small" target="_blank" rel="noopener" href="virtual-tours/another-tour/index.html">Open in new tab</a>
-              </div>
-            </div>
-          </div>
-          -->
-
-        </div>
-      </div>
-    </section><!-- End Gallery Section -->
-
-    <!-- ======= XR Section (iframe viewer) ======= -->
+    <!-- ======= XR Section ======= -->
     <section id="xr-tour" class="services">
       <div class="container">
         <div class="row justify-content-center">
           <div class="col-lg-12">
-            <div class="iframe-wrap">
-              <!-- Default pick — change if you want a different default -->
-              <iframe id="xrFrame" src="virtual-tours/icon-tower/index.html" width="100%" height="100%" style="border:none;" allowfullscreen></iframe>
-            </div>
+            <iframe src="virtual-tours/IconTower/index.html" width="100%" height="700" style="border:none;" allowfullscreen></iframe>
           </div>
         </div>
       </div>
@@ -157,7 +107,11 @@
         &copy; Copyright <strong><span>1405Media</span></strong>. All Rights Reserved
       </div>
       <div class="credits">
+        
         Designed by 1405Media
+      </div>
+      <div class="credits">
+        
       </div>
     </div>
   </footer><!-- End Footer -->
@@ -177,48 +131,6 @@
 
   <!-- Template Main JS File -->
   <script src="assets/js/main.js"></script>
-
-  <!-- Small script to make gallery cards load the iframe -->
-  <script>
-    (function(){
-      const grid = document.getElementById('tourGrid');
-      const frame = document.getElementById('xrFrame');
-
-      function clearActive() {
-        grid.querySelectorAll('.tour-card').forEach(c => c.classList.remove('active'));
-      }
-
-      // Load when clicking the small "Load" button
-      grid.addEventListener('click', function(e){
-        const btn = e.target.closest('.btn-load');
-        if(!btn) return;
-        const card = btn.closest('.tour-card');
-        if(!card) return;
-        const src = card.getAttribute('data-src');
-        if(!src) return;
-        frame.src = src;
-        clearActive();
-        card.classList.add('active');
-        const link = card.querySelector('a[target="_blank"]');
-        if(link) link.href = src;
-      });
-
-      // Make whole card clickable (except the Open-in-new-tab link)
-      grid.addEventListener('click', function(e){
-        const card = e.target.closest('.tour-card');
-        if(!card) return;
-        if(e.target.tagName.toLowerCase() === 'a') return;
-        if(e.target.closest('.btn-load')) return;
-        const src = card.getAttribute('data-src');
-        if(src){
-          frame.src = src;
-          clearActive();
-          card.classList.add('active');
-        }
-      });
-
-    })();
-  </script>
 
 </body>
 </html>
